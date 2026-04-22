@@ -20,7 +20,7 @@ class AuthControler extends Controller
         //user login
         if (FacadesAuth::attempt($credentials)){
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([
@@ -32,7 +32,7 @@ class AuthControler extends Controller
     public function register(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('register');
+            return view('auth.register');
         }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -48,7 +48,7 @@ class AuthControler extends Controller
 
         FacadesAuth::login($user);
 
-        return redirect()->intended('/login');
+        return redirect()->intended('/');
     }
 
     public function logout(Request $request){
