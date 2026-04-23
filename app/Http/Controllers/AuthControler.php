@@ -4,21 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
 
 class AuthControler extends Controller
 {
     public function login(Request $request){
-        $request->validate([
-            'email'=> 'required|email|max:50',
-            'password' => 'required|max:50',
-        ]);
-        
-        $credentials = $request -> only('email','password');
 
+        $credentials = $request->validate([
+            'email' => ['required','email'],
+            'password' => ['required'],
+        ]);
+
+        //user login
         if (FacadesAuth::attempt($credentials)){
-            // dd('login berhasil');
-            return redirect('/dashboard');
+            $request->session()->regenerate();
+            return redirect()->intended('/');
         }
-        return back()-> with('failed','Email atau Password salah')->onlyInput('email');
+
+        return back()->withErrors([
+            'email' => 'Email atau Password yang Anda masukan salah.'
+        ])->onlyInput('email');
+    }
+
+
+    public function register(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('auth.register');
+        }
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        FacadesAuth::login($user);
+
+        return redirect()->intended('/');
+    }
+
+    public function logout(Request $request){
+        FacadesAuth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
+        
     }
 }
