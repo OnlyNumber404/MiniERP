@@ -1,24 +1,52 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function Category(){
-        // $category = [
-        //     ['name' => 'Makanan', 'tipe' => 'expense'],
-        //     ['name' => 'Transportasi', 'tipe' => 'expense'],
-        //     ['name' => 'Gaji', 'tipe' => 'income'],
-        //     ['name' => 'Sewa Rumah', 'tipe' => 'expense'],
-        //     ['name' => 'Donasi', 'tipe' => 'expense'],
-        // ];
+    public function index()
+    {
+        $categories = Category::latest()->get();
 
-        $category = Category::all();
+        return view('kategori', compact('categories'));
+    }
 
-        return view('categories', compact('category'));
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'cat_name' => 'required|string|max:255',
+            'type' => 'required|in:income,expense',
+        ]);
+
+        Category::create($validated);
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan.');
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'cat_name' => 'required|string|max:255',
+            'type' => 'required|in:income,expense',
+        ]);
+
+        $category->update($validated);
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui.');
+    }
+
+    public function destroy(Category $category)
+    {
+        // Prevent deletion if there are transactions associated
+        if ($category->transaction()->count() > 0) {
+            return redirect()->route('category.index')->with('error', 'Kategori tidak bisa dihapus karena masih memiliki transaksi terkait.');
+        }
+
+        $category->delete();
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }
