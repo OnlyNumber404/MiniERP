@@ -29,4 +29,10 @@ class TransactionController extends Controller
 
         return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
+
+    public function delete(Transaction $transaction)
+    {
+        $transaction->delete();
+        return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
 }

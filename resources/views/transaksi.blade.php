@@ -21,7 +21,7 @@
     <div class="bg-white rounded-xl border border-gray-200 shadow-xs mb-8">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
             <h2 class="text-lg font-bold text-gray-800">Daftar Transaksi</h2>
-            <button onclick="openModal('addTransactionModal')" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition">
+            <button onclick="openModal('addTransactionModal')" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition hover:cursor-pointer">
                 + Tambah Transaksi
             </button>
         </div>
@@ -46,6 +46,13 @@
                         <td class="p-4 text-gray-600">{{ $transaction->desc }}</td>
                         <td class="p-4 text-right font-semibold {{ $transaction->category && $transaction->category->type == 'income' ? 'text-green-500' : 'text-red-500' }}">
                             Rp {{ number_format($transaction->amount, 2, ',', '.') }}
+                        </td>
+                        <td>
+                            <form action="{{ route('transaction.delete', $transaction->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="h-7 px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition hover:cursor-pointer">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     @empty
@@ -76,7 +83,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                        <select name="category_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500">
+                        <select name="category_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500 hover:cursor-pointer">
                             <option value="" disabled selected>Pilih Kategori</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->cat_name }} ({{ $category->type == 'income' ? 'Pemasukkan' : 'Pengeluaran' }})</option>
@@ -89,12 +96,12 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
-                        <input type="number" name="amount" min="0" step="0.01" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500">
+                        <input type="number" name="amount" min="0" step="1000" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500">
                     </div>
                 </div>
                 <div class="p-6 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50">
-                    <button type="button" onclick="closeModal('addTransactionModal')" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600">Simpan</button>
+                    <button type="button" onclick="closeModal('addTransactionModal')" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:border-red-600 hover:text-red-600 hover:cursor-pointer">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 hover:cursor-pointer">Simpan</button>
                 </div>
             </form>
         </div>
