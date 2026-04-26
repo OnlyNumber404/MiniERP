@@ -38,13 +38,12 @@ class CategoryController extends Controller
         return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
-    public function destroy(Category $category)
+    public function delete(Category $category)
     {
         // Prevent deletion if there are transactions associated
         if ($category->transaction()->count() > 0) {
             return redirect()->route('category.index')->with('error', 'Kategori tidak bisa dihapus karena masih memiliki transaksi terkait.');
         }
-
         $category->delete();
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus.');

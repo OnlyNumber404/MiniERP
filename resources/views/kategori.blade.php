@@ -26,7 +26,7 @@
     <div class="bg-white rounded-xl border border-gray-200 shadow-xs mb-8">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
             <h2 class="text-lg font-bold text-gray-800">Daftar Kategori</h2>
-            <button onclick="openModal('addCategoryModal')" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition">
+            <button onclick="openModal('addCategoryModal')" class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition hover:cursor-pointer">
                 + Tambah Kategori
             </button>
         </div>
@@ -52,11 +52,11 @@
                             @endif
                         </td>
                         <td class="p-4 flex justify-center space-x-2">
-                            <button onclick="openEditModal({{ $category->id }}, '{{ $category->cat_name }}', '{{ $category->type }}')" class="px-3 py-1 bg-amber-500 text-white rounded-md text-xs hover:bg-amber-600 transition">Edit</button>
-                            <form action="{{ route('category.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');" class="inline">
+                            <button onclick="openEditModal({{ $category->id }}, '{{ $category->cat_name }}', '{{ $category->type }}')" class="px-3 py-1 bg-amber-500 text-white rounded-md text-xs hover:bg-amber-600 transition hover:cursor-pointer">Edit</button>
+                            <form action="{{ route('category.delete', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition">Hapus</button>
+                                <button type="submit" class="h-7 px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition hover:cursor-pointer">Hapus</button>
                             </form>
                         </td>
                     </tr>

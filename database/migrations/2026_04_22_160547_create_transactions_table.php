@@ -15,10 +15,9 @@ return new class extends Migration {
             $table->date('trans_date');
             $table->string('desc');
             $table->integer('amount');
-
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
