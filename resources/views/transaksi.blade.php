@@ -25,6 +25,47 @@
                 + Tambah Transaksi
             </button>
         </div>
+
+        <!-- Form Filter -->
+        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+            <form action="{{ route('transaction.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Mulai Tanggal</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Sampai Tanggal</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Kategori</label>
+                    <select name="category_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500 hover:cursor-pointer">
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->cat_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Jenis</label>
+                    <select name="type" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-teal-500 hover:cursor-pointer">
+                        <option value="">Semua Jenis</option>
+                        <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Pemasukan</option>
+                        <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto mt-4 md:mt-0">
+                    <button type="submit" class="w-full md:w-auto px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-900 transition hover:cursor-pointer h-[38px]">
+                        Terapkan
+                    </button>
+                    @if(request()->anyFilled(['start_date', 'end_date', 'category_id', 'type']))
+                        <a href="{{ route('transaction.index') }}" class="w-full md:w-auto px-4 py-2 bg-white border border-gray-300 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition hover:cursor-pointer h-[38px] flex items-center justify-center">
+                            Reset
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
         
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -63,6 +104,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="mt-4 flex justify-center">
+         {{ $transactions->links() }}
     </div>
 
     <!-- Modal Tambah Transaksi -->

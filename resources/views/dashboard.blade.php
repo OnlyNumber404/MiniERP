@@ -21,10 +21,29 @@
         </div>
     </div>
 
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Line Chart -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+            <h3 class="text-gray-800 text-lg font-bold mb-4">Statistik Keuangan (30 Hari Terakhir)</h3>
+            <div class="relative h-64 w-full">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+            <h3 class="text-gray-800 text-lg font-bold mb-4">Distribusi Kategori</h3>
+            <div class="relative h-64 w-full flex justify-center">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Last Transactions List -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-xs">
         <div class="p-6 border-b border-gray-100">
-            <h2 class="text-lg font-bold text-gray-800">Transaksi Terakhir</h2>
+            <h2 class="text-lg font-bold text-gray-800">Transaksi Terakhir (5)</h2>
         </div>
         <div class="p-6">
             <div class="flex flex-col space-y-4">
@@ -47,4 +66,83 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Line Chart
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            const lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($lineDates) !!},
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: {!! json_encode($lineIncome) !!},
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: {!! json_encode($lineExpense) !!},
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if(value >= 1000000) return (value / 1000000) + 'M';
+                                    if(value >= 1000) return (value / 1000) + 'K';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            const pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: {!! json_encode($pieLabels) !!},
+                    datasets: [{
+                        data: {!! json_encode($pieData) !!},
+                        backgroundColor: {!! json_encode($pieColors) !!},
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </x-main>

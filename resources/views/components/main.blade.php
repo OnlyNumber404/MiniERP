@@ -21,7 +21,7 @@
             <!-- Navigation Links -->
             <nav class="flex-1 space-y-1">
                 <!--dashboard-->
-                <x-nav href="/" :active="request()->is('dashboard')">
+                <x-nav href="/" :active="request()->is('/')">
                     <!-- Dashboard Icon -->
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" 
@@ -46,6 +46,15 @@
                             d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581a1.125 1.125 0 001.591 0l7.218-7.218a1.125 1.125 0 000-1.591L11.859 3.659A2.25 2.25 0 0010.268 3zM6.75 6.75h.008v.008H6.75V6.75z" />
                     </svg>
                     <span class="font-medium text-[15px]">Kategori</span>
+                </x-nav>
+                <!--Analisa-->
+                <x-nav href="/analisa" :active="request()->is('analisa')">
+                    <!-- Analisa Icon -->
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" 
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="font-medium text-[15px]">Analisa</span>
                 </x-nav>
         </aside>
 

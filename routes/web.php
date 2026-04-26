@@ -25,3 +25,6 @@ Route::get('/register', [AuthControler::class, 'register'])->name('register');
 Route::post('/register', [AuthControler::class, 'register']);
 
 Route::post('/logout', [AuthControler::class, 'logout'])->name('logout');
+
+// Analisa
+Route::get('/analisa', [\App\Http\Controllers\AnalisaController::class, 'index'])->name('analisa.index');
