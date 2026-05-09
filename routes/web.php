@@ -9,7 +9,7 @@ Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->na
 // Transaksi
 Route::get('/transaction', [\App\Http\Controllers\TransactionController::class, 'index'])->name('transaction.index');
 Route::post('/transaction', [\App\Http\Controllers\TransactionController::class, 'store'])->name('transaction.store');
-Route::delete('/transaction/{transaction}',[App\Http\Controllers\TransactionController::class,'delete'])->name('transaction.delete');
+Route::delete('/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'delete'])->name('transaction.delete');
 
 // Kategory
 Route::get('/category', [\App\Http\Controllers\CategoryController::class, 'index'])->name('category.index');
@@ -28,3 +28,4 @@ Route::post('/logout', [AuthControler::class, 'logout'])->name('logout');
 
 // Analisa
 Route::get('/analisa', [\App\Http\Controllers\AnalisaController::class, 'index'])->name('analisa.index');
+Route::post('/analisa', [\App\Http\Controllers\AnalisaController::class, 'updateAmount'])->name('analisa.update');
