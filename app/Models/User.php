@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function erp()
+    {
+        return $this->hasOne(Erp::class);
+    }
 }

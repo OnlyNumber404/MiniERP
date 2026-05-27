@@ -17,6 +17,9 @@ Route::post('/category', [\App\Http\Controllers\CategoryController::class, 'stor
 Route::put('/category/{category}', [\App\Http\Controllers\CategoryController::class, 'update'])->name('category.update');
 Route::delete('/category/{category}', [\App\Http\Controllers\CategoryController::class, 'delete'])->name('category.delete');
 
+// Dreamplane
+Route::get('/dreamplane', [\App\Http\Controllers\DreamplaneController::class, 'index'])->name('dreamplane.index');
+
 // Auth routes
 Route::get('/login', fn () => view('auth.login'))->name('login');
 Route::post('/login', [AuthControler::class, 'login']);
@@ -29,3 +32,5 @@ Route::post('/logout', [AuthControler::class, 'logout'])->name('logout');
 // Analisa
 Route::get('/analisa', [\App\Http\Controllers\AnalisaController::class, 'index'])->name('analisa.index');
 Route::post('/analisa', [\App\Http\Controllers\AnalisaController::class, 'updateAmount'])->name('analisa.update');
+Route::post('/analisa/favorite', [\App\Http\Controllers\AnalisaController::class, 'addFavorite'])->name('analisa.favorite.add');
+Route::delete('/analisa/favorite/{id}', [\App\Http\Controllers\AnalisaController::class, 'removeFavorite'])->name('analisa.favorite.remove');
