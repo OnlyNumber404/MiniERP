@@ -17,8 +17,8 @@ Route::post('/category', [\App\Http\Controllers\CategoryController::class, 'stor
 Route::put('/category/{category}', [\App\Http\Controllers\CategoryController::class, 'update'])->name('category.update');
 Route::delete('/category/{category}', [\App\Http\Controllers\CategoryController::class, 'delete'])->name('category.delete');
 
-// Dreamplane
-Route::get('/dreamplane', [\App\Http\Controllers\DreamplaneController::class, 'index'])->name('dreamplane.index');
+// Report
+Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
 
 // Auth routes
 Route::get('/login', fn () => view('auth.login'))->name('login');
