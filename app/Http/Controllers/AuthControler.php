@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-
 
 class AuthControler extends Controller
 {
-    public function login(Request $request){
+    public function login(Request $request)
+    {
 
         $credentials = $request->validate([
-            'email' => ['required','email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        //user login
-        if (FacadesAuth::attempt($credentials)){
+        // user login
+        if (FacadesAuth::attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended('/');
         }
 
         return back()->withErrors([
-            'email' => 'Email atau Password yang Anda masukan salah.'
+            'email' => 'Email atau Password yang Anda masukan salah.',
         ])->onlyInput('email');
     }
-
 
     public function register(Request $request)
     {
@@ -46,18 +46,24 @@ class AuthControler extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
+        \App\Models\Erp::create([
+            'user_id' => $user->id,
+            'name' => $user->name."'s ERP",
+        ]);
+
         FacadesAuth::login($user);
 
         return redirect()->intended('/');
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         FacadesAuth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/login');
-        
+
     }
 }
