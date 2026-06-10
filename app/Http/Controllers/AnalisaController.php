@@ -37,21 +37,32 @@ class AnalisaController extends Controller
         $coinIds = $assets->pluck('coin_id')->toArray();
         $coinIdsString = implode(',', $coinIds);
 
-        $prices = \Illuminate\Support\Facades\Cache::remember('crypto_prices_' . md5($coinIdsString), 60, function () use ($coinIdsString) {
-            $response = Http::get('https://api.coingecko.com/api/v3/simple/price', [
-                'ids' => $coinIdsString,
-                'vs_currencies' => 'usd',
-            ]);
+        $prices = \Illuminate\Support\Facades\Cache::remember('crypto_prices_'.md5($coinIdsString), 60, function () use ($coinIdsString) {
+            try {
+                $response = Http::timeout(5)->get('https://api.coingecko.com/api/v3/simple/price', [
+                    'ids' => $coinIdsString,
+                    'vs_currencies' => 'idr',
+                ]);
 
-            return $response->json() ?? [];
+                if ($response->successful()) {
+                    return $response->json() ?? [];
+                }
+
+                return [];
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('CoinGecko API Error: '.$e->getMessage());
+
+                return [];
+            }
         });
 
+        $apiError = empty($prices);
         $totalValue = 0;
         $watchlist = [];
         $assetData = [];
 
         foreach ($assets as $asset) {
-            $price = $prices[$asset->coin_id]['usd'] ?? 0;
+            $price = $prices[$asset->coin_id]['idr'] ?? 0;
             $value = $asset->amount * $price;
             $totalValue += $value;
 
@@ -71,7 +82,7 @@ class AnalisaController extends Controller
 
         $supportedCoins = self::SUPPORTED_COINS;
 
-        return view('analisa', compact('assetData', 'totalValue', 'watchlist', 'supportedCoins', 'assets'));
+        return view('analisa', compact('assetData', 'totalValue', 'watchlist', 'supportedCoins', 'assets', 'apiError'));
     }
 
     public function addFavorite(Request $request)
@@ -87,7 +98,7 @@ class AnalisaController extends Controller
             return back()->withErrors(['coin_id' => 'Maksimal koin favorit adalah 3.']);
         }
 
-        if (!array_key_exists($request->coin_id, self::SUPPORTED_COINS)) {
+        if (! array_key_exists($request->coin_id, self::SUPPORTED_COINS)) {
             return back()->withErrors(['coin_id' => 'Koin tidak didukung.']);
         }
 
@@ -139,6 +150,6 @@ class AnalisaController extends Controller
             ['amount' => $request->amount]
         );
 
-        return redirect()->route('analisa.index')->with('success', 'Jumlah ' . strtoupper($request->coin_id) . ' berhasil diperbarui.');
+        return redirect()->route('analisa.index')->with('success', 'Jumlah '.strtoupper($request->coin_id).' berhasil diperbarui.');
     }
 }

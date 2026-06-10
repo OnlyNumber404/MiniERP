@@ -19,6 +19,7 @@ Route::delete('/category/{category}', [\App\Http\Controllers\CategoryController:
 
 // Report
 Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
+Route::get('/report/pdf', [\App\Http\Controllers\ReportController::class, 'pdf'])->name('report.pdf');
 
 // Auth routes
 Route::get('/login', fn () => view('auth.login'))->name('login');

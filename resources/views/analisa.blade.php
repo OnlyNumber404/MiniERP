@@ -1,6 +1,13 @@
 <x-main>
   <x-slot:title>Analisa</x-slot:title>
   <x-slot:head>Analisa</x-slot:head>
+  @if($apiError)
+    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+      <strong class="font-bold">Perhatian:</strong>
+      <span class="block sm:inline">Layanan data harga koin (CoinGecko) sedang bermasalah atau mencapai limit akses. Harga mungkin tidak akurat atau menunjukkan angka 0.</span>
+    </div>
+  @endif
+
   @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
       <span class="block sm:inline">{{ session('success') }}</span>
@@ -21,8 +28,8 @@
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
     <!-- Total Value -->
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-xs flex-1 w-full md:w-auto">
-      <h3 class="text-green-500 text-sm font-bold mb-1 uppercase tracking-wide">Total Nilai Semua Asset (USD)</h3>
-      <p class="text-3xl font-bold text-green-500">${{ number_format($totalValue ?? 0, 2) }}</p>
+      <h3 class="text-green-500 text-sm font-bold mb-1 uppercase tracking-wide">Total Nilai Semua Asset (IDR)</h3>
+      <p class="text-3xl font-bold text-green-500">Rp {{ number_format($totalValue ?? 0, 0, ',', '.') }}</p>
     </div>
 
     <!-- Add Favorite Form -->
@@ -69,7 +76,7 @@
               </form>
             @endif
           </div>
-          <p class="text-xl font-bold text-blue-600 mb-4">Harga: ${{ number_format($asset['price'], 2) }}</p>
+          <p class="text-xl font-bold text-blue-600 mb-4">Harga: Rp {{ number_format($asset['price'], 0, ',', '.') }}</p>
         </div>
 
         <form action="{{ route('analisa.update') }}" method="POST" class="flex flex-col gap-2 mt-1">
@@ -86,7 +93,7 @@
 
         <div class="mt-4 pt-4 border-t border-gray-100">
           <p class="text-sm text-gray-500">Nilai Aset: <span
-              class="font-bold text-green-500">${{ number_format($asset['value'], 2) }}</span></p>
+              class="font-bold text-green-500">Rp {{ number_format($asset['value'], 0, ',', '.') }}</span></p>
         </div>
       </div>
     @endforeach
