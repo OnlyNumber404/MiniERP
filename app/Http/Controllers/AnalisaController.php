@@ -38,14 +38,25 @@ class AnalisaController extends Controller
         $coinIdsString = implode(',', $coinIds);
 
         $prices = \Illuminate\Support\Facades\Cache::remember('crypto_prices_'.md5($coinIdsString), 60, function () use ($coinIdsString) {
-            $response = Http::get('https://api.coingecko.com/api/v3/simple/price', [
-                'ids' => $coinIdsString,
-                'vs_currencies' => 'idr',
-            ]);
+            try {
+                $response = Http::timeout(5)->get('https://api.coingecko.com/api/v3/simple/price', [
+                    'ids' => $coinIdsString,
+                    'vs_currencies' => 'idr',
+                ]);
 
-            return $response->json() ?? [];
+                if ($response->successful()) {
+                    return $response->json() ?? [];
+                }
+
+                return [];
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('CoinGecko API Error: '.$e->getMessage());
+
+                return [];
+            }
         });
 
+        $apiError = empty($prices);
         $totalValue = 0;
         $watchlist = [];
         $assetData = [];
@@ -71,7 +82,7 @@ class AnalisaController extends Controller
 
         $supportedCoins = self::SUPPORTED_COINS;
 
-        return view('analisa', compact('assetData', 'totalValue', 'watchlist', 'supportedCoins', 'assets'));
+        return view('analisa', compact('assetData', 'totalValue', 'watchlist', 'supportedCoins', 'assets', 'apiError'));
     }
 
     public function addFavorite(Request $request)
