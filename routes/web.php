@@ -8,6 +8,8 @@ Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->na
 
 // Transaksi
 Route::get('/transaction', [\App\Http\Controllers\TransactionController::class, 'index'])->name('transaction.index');
+Route::get('/transaction/{transaction}', [\App\Http\Controllers\TransactionController::class, 'show'])->name('transaction.show');
+Route::get('/transaction/{transaction}/file', [\App\Http\Controllers\TransactionController::class, 'file'])->name('transaction.file');
 Route::post('/transaction', [\App\Http\Controllers\TransactionController::class, 'store'])->name('transaction.store');
 Route::delete('/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'delete'])->name('transaction.delete');
 

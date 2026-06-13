@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -41,9 +42,14 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'trans_date' => 'required|date',
             'desc' => 'required|string|max:255',
+            'path' => 'nullable|mimes:png,jpg,jpeg,pdf|max:2048',
             'amount' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ]);
+
+        if ($request->hasFile('path')) {
+            $validated['path'] = $request->file('path')->store('transactions');
+        }
 
         Transaction::create($validated);
 
@@ -55,5 +61,23 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
+
+    public function show(Transaction $transaction)
+    {
+        if (! $transaction->path || ! Storage::disk('local')->exists($transaction->path)) {
+            abort(404);
+        }
+
+        return view('transactions.show', compact('transaction'));
+    }
+
+    public function file(Transaction $transaction)
+    {
+        if (! $transaction->path || ! Storage::disk('local')->exists($transaction->path)) {
+            abort(404);
+        }
+
+        return response()->file(Storage::disk('local')->path($transaction->path));
     }
 }
