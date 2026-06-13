@@ -11,7 +11,7 @@ class Transaction extends Model
 {
     use BelongsToErp, HasFactory, SoftDeletes;
 
-    protected $fillable = ['trans_date', 'desc', 'amount', 'category_id', 'erp_id'];
+    protected $fillable = ['trans_date', 'desc', 'path', 'amount', 'category_id', 'erp_id'];
 
     public function category()
     {
