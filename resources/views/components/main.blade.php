@@ -6,18 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ asset('photos/Gemini_Generated_Image_aa9kpbaa9kpbaa9k.png') }}">
     <title>{{$title}}</title>
     @vite('resources/css/app.css')
 </head>
 
-<body id="theme-body" class="text-white font-sans antialiased">
-    <div class="h-screen w-full flex">
+<body id="theme-body" class="text-white font-sans antialiased bg-gray-50">
+    <div class="h-screen w-full flex flex-col md:flex-row relative">
+
+        <!-- Mobile Header -->
+        <div class="md:hidden flex items-center justify-between bg-[#121212] px-5 py-4 w-full z-10">
+            <p class="font-Quicksand font-bold text-2xl bg-linear-to-r from-teal-200 to-teal-500 bg-clip-text text-transparent">MiniERP</p>
+            <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
+
         <!-- Sidebar container -->
-        <aside class="w-60 h-full flex flex-col py-8 px-5 border-r border-[#121212] bg-[#121212] overflow-y-auto custom-scrollbar">
-            <!--Logo-->
-            <div class="px-3 py-3 text-center mb-4 rounded-3xl">
-                <p class="font-Quicksand font-bold text-3xl bg-linear-to-r from-teal-200 to-teal-500 bg-clip-text text-transparent ">MiniERP</p>
+        <aside id="sidebar" class="w-60 h-full flex-col py-6 px-5 border-r border-[#121212] bg-[#121212] overflow-y-auto custom-scrollbar absolute md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out flex">
+
+            <!-- Sidebar Header / Logo -->
+            <div class="flex items-center justify-between mb-8 md:mb-4">
+                <div class="text-center rounded-3xl">
+                    <p class="font-Quicksand font-bold text-2xl md:text-3xl bg-linear-to-r from-teal-200 to-teal-500 bg-clip-text text-transparent">MiniERP</p>
+                </div>
+                <!-- Close button for mobile -->
+                <button id="close-sidebar-btn" class="md:hidden text-gray-400 hover:text-white focus:outline-none p-1 rounded-md hover:bg-[#1a1a1a] transition">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
+
             <!-- Navigation Links -->
             <nav class="flex-1 space-y-1">
                 <!--dashboard-->
@@ -67,8 +92,8 @@
         </aside>
 
         <!-- Main Content Layout Area -->
-        <main class="flex-1 overflow-y-visible overflow-hidden p-8">
-            <header class="flex justify-between items-center mb-8">
+        <main class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 bg-gray-50 text-gray-800">
+            <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8">
                 <h1 class="text-3xl font-bold text-gray-800 font-Quicksand">
                     {{$head}}
                 </h1>
@@ -88,5 +113,21 @@
             {{ $slot }}
         </main>
     </div>
+
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(btn) btn.addEventListener('click', toggleSidebar);
+        if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+    </script>
 </body>
 </html>
