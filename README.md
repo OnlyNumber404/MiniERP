@@ -33,23 +33,23 @@ This project uses the **[CoinGecko](https://www.coingecko.com/en/api)** to retri
 ## 💻 Getting Started
 
 1.  **Clone the repository**
-```bash
+    ```bash
     git clone [https://github.com/OnlyNumber404/MiniERP.git](https://github.com/OnlyNumber404/MiniERP.git)
     ```
 2.  **Install dependencies**
-```bash
+    ```bash
     composer install
     ```
 3. **Install Frontend Dependencies**
-```bash
+    ```bash
     npm install
     ```
 4. **Generate Application Key**
-```bash
+    ```bash
     php artisan key:generate
     ```
 5.  **Run the project**
-```bash
+    ```bash
     composer run dev
     ```
 
