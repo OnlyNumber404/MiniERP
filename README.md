@@ -34,7 +34,7 @@ This project uses the **[CoinGecko](https://www.coingecko.com/en/api)** to retri
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/OnlyNumber404/MiniERP.git](https://github.com/OnlyNumber404/MiniERP.git)
+    git clone https://github.com/OnlyNumber404/MiniERP.git
     ```
 2.  **Install dependencies**
     ```bash
